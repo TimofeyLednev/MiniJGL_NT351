@@ -44,7 +44,6 @@ import java.lang.UnsatisfiedLinkError;
  * $Id$
  */
 final class MacOSXSysImplementation extends J2SESysImplementation {
-	@java.lang.annotation.Native
 	private static final int JNI_VERSION = 25;
 
 	static {

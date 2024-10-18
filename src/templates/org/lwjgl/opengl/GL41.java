@@ -145,28 +145,28 @@ public interface GL41 {
 	void glActiveShaderProgram(@GLuint int pipeline, @GLuint int program);
 
 	/** Single null-terminated source code string. */
-	@StripPostfix(value = "string", hasPostfix = false)
+	@StripPostfix(value = "string", postfix = "v")
 	@GLuint
 	int glCreateShaderProgramv(@GLenum int type, @Constant("1") @GLsizei int count, @NullTerminated @Check @Const @Indirect @GLchar ByteBuffer string);
 
 	/** Multiple null-terminated source code strings, one after the other. */
 	@Alternate(value = "glCreateShaderProgramv", nativeAlt = true)
-	@StripPostfix(value = "strings", hasPostfix = false)
+	@StripPostfix(value = "strings", postfix = "v")
 	@GLuint
 	int glCreateShaderProgramv2(@GLenum int type, @GLsizei int count, @NullTerminated("count") @Check @Const @Indirect @GLchar @PointerArray("count") ByteBuffer strings);
 
 	@Alternate(value = "glCreateShaderProgramv", nativeAlt = true)
-	@StripPostfix(value = "strings", hasPostfix = false)
+	@StripPostfix(value = "strings", postfix = "v")
 	@GLuint
 	int glCreateShaderProgramv3(@GLenum int type, @Constant("strings.length") @GLsizei int count, @NullTerminated @Check("1") @PointerArray(value = "count") @Const @NativeType("GLchar") ByteBuffer[] strings);
 
 	@Alternate("glCreateShaderProgramv")
-	@StripPostfix(value = "string", hasPostfix = false)
+	@StripPostfix(value = "string", postfix = "v")
 	@GLuint
 	int glCreateShaderProgramv(@GLenum int type, @Constant("1") @GLsizei int count, @NullTerminated CharSequence string);
 
 	@Alternate(value = "glCreateShaderProgramv", nativeAlt = true, skipNative = true)
-	@StripPostfix(value = "strings", hasPostfix = false)
+	@StripPostfix(value = "strings", postfix = "v")
 	@GLuint
 	int glCreateShaderProgramv2(@GLenum int type, @Constant("strings.length") @GLsizei int count,
 	                            @Const @NullTerminated @PointerArray(value = "count") CharSequence[] strings);
@@ -191,7 +191,7 @@ public interface GL41 {
 
 	@Alternate("glGetProgramPipelineiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", hasPostfix = false)
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetProgramPipelineiv2(@GLuint int pipeline, @GLenum int pname, @OutParameter IntBuffer params);
 
 	void glProgramUniform1i(@GLuint int program, int location, int v0);
@@ -356,6 +356,20 @@ public interface GL41 {
 	// ----------------------[ ARB_vertex_attrib_64bit ]----------------------
 	// -----------------------------------------------------------------------
 
+	/** Returned in the &lt;type&gt; parameter of GetActiveAttrib: */
+	int GL_DOUBLE_VEC2   = 0x8FFC;
+	int GL_DOUBLE_VEC3   = 0x8FFD;
+	int GL_DOUBLE_VEC4   = 0x8FFE;
+	int GL_DOUBLE_MAT2   = 0x8F46;
+	int GL_DOUBLE_MAT3   = 0x8F47;
+	int GL_DOUBLE_MAT4   = 0x8F48;
+	int GL_DOUBLE_MAT2x3 = 0x8F49;
+	int GL_DOUBLE_MAT2x4 = 0x8F4A;
+	int GL_DOUBLE_MAT3x2 = 0x8F4B;
+	int GL_DOUBLE_MAT3x4 = 0x8F4C;
+	int GL_DOUBLE_MAT4x2 = 0x8F4D;
+	int GL_DOUBLE_MAT4x3 = 0x8F4E;
+
 	void glVertexAttribL1d(@GLuint int index, double x);
 
 	void glVertexAttribL2d(@GLuint int index, double x, double y);
@@ -398,11 +412,26 @@ public interface GL41 {
 		GL_LAYER_PROVOKING_VERTEX          = 0x825E,
 		GL_VIEWPORT_INDEX_PROVOKING_VERTEX = 0x825F;
 
+	/** Accepted by the &lt;pname&gt; parameter of GetIntegeri_v: */
+	int GL_SCISSOR_BOX = 0x0C10;
+
+	/** Accepted by the &lt;pname&gt; parameter of GetFloati_v: */
+	int GL_VIEWPORT = 0x0BA2;
+
+	/** Accepted by the &lt;pname&gt; parameter of GetDoublei_v: */
+	int GL_DEPTH_RANGE = 0x0B70;
+
+	/** Accepted by the &lt;pname&gt; parameter of Enablei, Disablei, and IsEnabledi: */
+	int GL_SCISSOR_TEST = 0x0C11;
+
 	/**
 	 * Returned in the &lt;data&gt; parameter from a Get query with a &lt;pname&gt; of
 	 * LAYER_PROVOKING_VERTEX or VIEWPORT_INDEX_PROVOKING_VERTEX:
 	 */
-	int GL_UNDEFINED_VERTEX = 0x8260;
+	int GL_FIRST_VERTEX_CONVENTION = 0x8E4D,
+		GL_LAST_VERTEX_CONVENTION  = 0x8E4E,
+		GL_PROVOKING_VERTEX        = 0x8E4F,
+		GL_UNDEFINED_VERTEX        = 0x8260;
 
 	@StripPostfix("v")
 	void glViewportArrayv(@GLuint int first, @AutoSize(value = "v", expression = " >> 2") @GLsizei int count, @Const FloatBuffer v);

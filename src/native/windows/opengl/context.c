@@ -45,7 +45,7 @@
 
 extern HINSTANCE dll_handle;                     // Handle to the LWJGL dll
 
-#define _CONTEXT_PRIVATE_CLASS_NAME _T("__lwjgl_context_class_name")
+#define _CONTEXT_PRIVATE_CLASS_NAME TEXT("__lwjgl_context_class_name")
 
 /*
  * Register the LWJGL window class.
@@ -151,7 +151,7 @@ HWND createWindow(LPCTSTR window_class_name, int x, int y, int width, int height
 	new_hwnd = CreateWindowEx (
 			exstyle,
 			window_class_name,
-			_T(""),
+			TEXT(""),
 			windowflags,
 			x, y, clientSize.right - clientSize.left, clientSize.bottom - clientSize.top,
 			parent,

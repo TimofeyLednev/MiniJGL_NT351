@@ -33,15 +33,14 @@
 package org.lwjgl.util.generator.opencl;
 
 import org.lwjgl.PointerWrapper;
-import org.lwjgl.util.generator.Extension;
 import org.lwjgl.util.generator.Private;
-import org.lwjgl.util.generator.Utils;
 
 import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
-import java.util.Set;
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.TypeElement;
+import java.util.Collection;
+
+import com.sun.mirror.declaration.InterfaceDeclaration;
+import com.sun.mirror.declaration.TypeDeclaration;
 
 /**
  * CL platform/device capabilities generator.
@@ -68,18 +67,18 @@ public class CLPDCapabilitiesGenerator {
 		writer.println();
 	}
 
-	static void generateExtensions(final PrintWriter writer, final TypeElement d) {
+	static void generateExtensions(final PrintWriter writer, final InterfaceDeclaration d) {
 		writer.print("\t");
 
 		if ( d.getAnnotation(Private.class) == null )
 			writer.print("public ");
 
-		writer.println("final boolean " + CLGeneratorProcessor.getExtensionName(d.getSimpleName().toString()) + ";");
+		writer.println("final boolean " + CLGeneratorProcessorFactory.getExtensionName(d.getSimpleName()) + ";");
 	}
 
-	static void generateConstructor(ProcessingEnvironment env, final PrintWriter writer, final Set<? extends TypeElement> templates,
-		final Class<? extends Annotation> capsType, final String capsName,
-		final Class<? extends PointerWrapper> objectType, final String objectName) {
+	static void generateConstructor(final PrintWriter writer, final Collection<TypeDeclaration> templates,
+	                                final Class<? extends Annotation> capsType, final String capsName,
+	                                final Class<? extends PointerWrapper> objectType, final String objectName) {
 		writer.println("\tpublic " + capsName + "(final " + objectType.getSimpleName() + ' ' + objectName + ") {");
 
 		writer.println("\t\tfinal String extensionList = " + objectName + ".getInfoString(CL10.CL_" + objectName.toUpperCase() + "_EXTENSIONS);\n" +
@@ -103,19 +102,14 @@ public class CLPDCapabilitiesGenerator {
 
 		writer.println("\t\tfinal Set<String> extensions = APIUtil.getExtensions(extensionList);");
 
-		for ( final TypeElement t : templates ) {
+		for ( final TypeDeclaration t : templates ) {
 			if ( t.getAnnotation(capsType) == null )
 				continue;
 
-			final String extName = CLGeneratorProcessor.getExtensionName(t.getSimpleName().toString());
+			final String extName = CLGeneratorProcessorFactory.getExtensionName(t.getSimpleName());
 
-			String nativeName = extName.toLowerCase();
-			Extension ext = t.getAnnotation(Extension.class);
-			if ( ext != null && !ext.nativeName().isEmpty() )
-				nativeName = ext.nativeName();
-
-			writer.print("\t\t" + extName + " = extensions.contains(\"" + nativeName + "\")");
-			if ( !Utils.getMethods(t).isEmpty() )
+			writer.print("\t\t" + extName + " = extensions.contains(\"" + extName.toLowerCase() + "\")");
+			if ( !t.getMethods().isEmpty() )
 				writer.print(" && CLCapabilities." + extName);
 			writer.println(";");
 		}
@@ -133,18 +127,18 @@ public class CLPDCapabilitiesGenerator {
 		writer.println("\t}\n");
 	}
 
-	public static void generateToString(final PrintWriter writer, final Set<? extends TypeElement> templates, final Class<? extends Annotation> capsType) {
+	public static void generateToString(final PrintWriter writer, final Collection<TypeDeclaration> templates, final Class<? extends Annotation> capsType) {
 		writer.println("\tpublic String toString() {");
 		writer.println("\t\tfinal StringBuilder buf = new StringBuilder();\n");
 
 		writer.println("\t\tbuf.append(\"OpenCL \").append(majorVersion).append('.').append(minorVersion);");
 		writer.println();
 		writer.println("\t\tbuf.append(\" - Extensions: \");");
-		for ( final TypeElement t : templates ) {
+		for ( final TypeDeclaration t : templates ) {
 			if ( t.getAnnotation(capsType) == null )
 				continue;
 
-			writer.println("\t\tif ( " + CLGeneratorProcessor.getExtensionName(t.getSimpleName().toString()) + " ) buf.append(\"" + CLGeneratorProcessor.getExtensionName(t.getSimpleName().toString()).toLowerCase() + " \");");
+			writer.println("\t\tif ( " + CLGeneratorProcessorFactory.getExtensionName(t.getSimpleName()) + " ) buf.append(\""  + CLGeneratorProcessorFactory.getExtensionName(t.getSimpleName()).toLowerCase() + " \");");
 		}
 
 		writer.println("\n\t\treturn buf.toString();");

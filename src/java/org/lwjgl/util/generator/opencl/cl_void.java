@@ -35,10 +35,11 @@ import org.lwjgl.util.generator.NativeType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
-import javax.lang.model.type.TypeKind;
+
+import com.sun.mirror.type.PrimitiveType;
 
 @NativeType
 @Target({ ElementType.PARAMETER, ElementType.METHOD })
 public @interface cl_void {
-	TypeKind value() default TypeKind.BYTE;
+	PrimitiveType.Kind value() default PrimitiveType.Kind.BYTE;
 }

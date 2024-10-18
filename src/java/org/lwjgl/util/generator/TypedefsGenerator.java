@@ -41,19 +41,19 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
-import java.io.PrintWriter;
-import java.util.Collection;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
+import com.sun.mirror.declaration.*;
+import com.sun.mirror.type.*;
+
+import java.io.*;
+import java.util.*;
 
 public class TypedefsGenerator {
-	private static void generateNativeTypedefs(TypeMap type_map, PrintWriter writer, ExecutableElement method) {
+	private static void generateNativeTypedefs(TypeMap type_map, PrintWriter writer, MethodDeclaration method) {
 		TypeMirror return_type = method.getReturnType();
 		writer.print("typedef ");
 		writer.print(type_map.getTypedefPostfix());
 		NativeTypeTranslator translator = new NativeTypeTranslator(type_map, method);
-		return_type.accept(translator, null);
+		return_type.accept(translator);
 		writer.print(translator.getSignature());
 		writer.print(" (");
 		writer.print(type_map.getFunctionPrefix());
@@ -62,10 +62,10 @@ public class TypedefsGenerator {
 		writer.println(");");
 	}
 
-	private static void generateNativeTypedefsParameters(TypeMap type_map, PrintWriter writer, Collection<? extends VariableElement> params) {
-		if ( params.size() > 0 ) {
+	private static void generateNativeTypedefsParameters(TypeMap type_map, PrintWriter writer, Collection<ParameterDeclaration> params) {
+		if (params.size() > 0) {
 			boolean first = true;
-			for ( VariableElement param : params ) {
+			for ( ParameterDeclaration param : params ) {
 				if ( param.getAnnotation(Helper.class) != null )
 					continue;
 
@@ -79,17 +79,17 @@ public class TypedefsGenerator {
 		}
 	}
 
-	private static void generateNativeTypedefsParameter(TypeMap type_map, PrintWriter writer, VariableElement param) {
+	private static void generateNativeTypedefsParameter(TypeMap type_map, PrintWriter writer, ParameterDeclaration param) {
 		NativeTypeTranslator translator = new NativeTypeTranslator(type_map, param);
-		param.asType().accept(translator, null);
+		param.getType().accept(translator);
 		writer.print(translator.getSignature());
-		if ( param.getAnnotation(Result.class) != null || param.getAnnotation(Indirect.class) != null || param.getAnnotation(PointerArray.class) != null )
+		if (param.getAnnotation(Result.class) != null || param.getAnnotation(Indirect.class) != null || param.getAnnotation(PointerArray.class) != null)
 			writer.print("*");
 		writer.print(" " + param.getSimpleName());
 	}
 
-	public static void generateNativeTypedefs(TypeMap type_map, PrintWriter writer, Collection<? extends ExecutableElement> methods) {
-		for ( ExecutableElement method : methods ) {
+	public static void generateNativeTypedefs(TypeMap type_map, PrintWriter writer, Collection<? extends MethodDeclaration> methods) {
+		for (MethodDeclaration method : methods) {
 			if ( method.getAnnotation(Alternate.class) == null && method.getAnnotation(Reuse.class) == null )
 				generateNativeTypedefs(type_map, writer, method);
 		}

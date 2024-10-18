@@ -254,13 +254,13 @@ jobject getVersion(JNIEnv * env, char *driver)
 	if (version_cons == NULL)
 		return NULL;
 
-	dwInfoSize = GetFileVersionInfoSize(driver, &var);
+	dwInfoSize = GetFileVersionInfoSizeA(driver, &var);
 	lpInfoBuff = malloc(dwInfoSize);
 	if (lpInfoBuff == NULL) {
 		throwException(env, "Failed to allocate lpInfoBuff");
 		return NULL;
 	}
-	bRetval = GetFileVersionInfo(driver, 0, dwInfoSize, lpInfoBuff);
+	bRetval = GetFileVersionInfoA(driver, 0, dwInfoSize, lpInfoBuff);
 	if (bRetval != 0) {
 		VS_FIXEDFILEINFO * fxdFileInfo;
 

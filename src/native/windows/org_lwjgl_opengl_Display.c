@@ -50,8 +50,9 @@
 #include "org_lwjgl_WindowsSysImplementation.h"
 #include "context.h"
 #include <commctrl.h>
+#include <stdlib.h>
 
-#define WINDOWCLASSNAME _T("LWJGL")
+#define WINDOWCLASSNAME TEXT("LWJGL")
 
 static jclass windowsDisplayClass;
 static jmethodID javaWindowProc;
@@ -176,7 +177,10 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEn
 	static bool oneShotInitialised = false;
 	if (!oneShotInitialised) {
 		if (!registerWindow(lwjglWindowProc, WINDOWCLASSNAME)) {
-			throwException(env, "Could not register window class");
+			char strbuff[256];
+			//TODO -- NO!!!!!!!!!!!!!!!!!!!!!!!!!
+			sprintf(strbuff, "Could not register window class WIN32_ERROR(%d)\n", GetLastError());
+			throwException(env, strbuff);
 			return 0;
 		}
 		oneShotInitialised = true;
@@ -350,7 +354,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nReshape(JNIEnv *env
 }
 
 static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height) {
-	BITMAPV5HEADER bitmapInfo;
+/*	BITMAPV5HEADER bitmapInfo;
 	HBITMAP cursorMask;
 	HBITMAP	colorBitmap;
 	ICONINFO iconInfo;
@@ -430,7 +434,8 @@ static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height
 	DeleteObject(cursorMask);
 	free(maskPixels);
 
-	return icon;
+	return icon;*/
+	return LoadIcon(NULL, IDI_INFORMATION);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_destroyIcon
@@ -529,10 +534,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nReleaseCapture(
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nTrackMouseEvent(JNIEnv *env, jclass clazz, jlong hwnd_ptr) {
-		HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
-		TRACKMOUSEEVENT tme;
-		tme.cbSize = sizeof(TRACKMOUSEEVENT);
-		tme.dwFlags = TME_LEAVE;
-		tme.hwndTrack = hwnd;
-		return TrackMouseEvent(&tme);
+	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
+	TRACKMOUSEEVENT tme;
+	tme.cbSize = sizeof(TRACKMOUSEEVENT);
+	tme.dwFlags = TME_LEAVE;
+	tme.hwndTrack = hwnd;
+	return _TrackMouseEvent(&tme);
 }

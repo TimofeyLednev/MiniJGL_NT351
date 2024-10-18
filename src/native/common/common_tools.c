@@ -76,7 +76,15 @@ bool isDebugEnabled(void) {
 
 static int do_vsnprintf(char* buffer, size_t buffer_size, const char *format, va_list ap) {
 #ifdef _MSC_VER
-	return vsnprintf_s(buffer, buffer_size, _TRUNCATE, format, ap);
+	int result = _vsnprintf(buffer, buffer_size, format, ap);
+
+	// Ensure the buffer is null-terminated in case of truncation
+	if (result < 0 || result >= buffer_size) {
+		buffer[buffer_size - 1] = '\0'; // Manually null-terminate the buffer if truncated
+	}
+
+	return result;
+	//return vsnprintf_s(buffer, buffer_size, ((size_t)-1), format, ap);
 #else
 	va_list cp_ap;
 	va_copy(cp_ap, ap);

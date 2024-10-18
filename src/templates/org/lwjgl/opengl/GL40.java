@@ -40,7 +40,7 @@ import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import javax.lang.model.type.TypeKind;
+import com.sun.mirror.type.PrimitiveType;
 
 public interface GL40 {
 
@@ -78,12 +78,12 @@ public interface GL40 {
 	void glDrawArraysIndirect(@GLenum int mode, @BufferObject(BufferKind.IndirectBO) @Check("4 * 4") @Const @GLvoid ByteBuffer indirect);
 
 	@Alternate("glDrawArraysIndirect")
-	void glDrawArraysIndirect(@GLenum int mode, @BufferObject(BufferKind.IndirectBO) @Check("4") @Const @GLvoid(TypeKind.INT) IntBuffer indirect);
+	void glDrawArraysIndirect(@GLenum int mode, @BufferObject(BufferKind.IndirectBO) @Check("4") @Const @GLvoid(PrimitiveType.Kind.INT) IntBuffer indirect);
 
 	void glDrawElementsIndirect(@GLenum int mode, @GLenum int type, @BufferObject(BufferKind.IndirectBO) @Check("5 * 4") @Const @GLvoid ByteBuffer indirect);
 
 	@Alternate("glDrawElementsIndirect")
-	void glDrawElementsIndirect(@GLenum int mode, @GLenum int type, @BufferObject(BufferKind.IndirectBO) @Check("5") @Const @GLvoid(TypeKind.INT) IntBuffer indirect);
+	void glDrawElementsIndirect(@GLenum int mode, @GLenum int type, @BufferObject(BufferKind.IndirectBO) @Check("5") @Const @GLvoid(PrimitiveType.Kind.INT) IntBuffer indirect);
 
 	// ---------------------------------------------------------------
 	// ----------------------[ ARB_gpu_shader5 ]----------------------
@@ -213,6 +213,8 @@ public interface GL40 {
 	/** Accepted by the &lt;pname&gt; parameter of GetActiveSubroutineUniformiv: */
 	int GL_NUM_COMPATIBLE_SUBROUTINES = 0x8E4A;
 	int GL_COMPATIBLE_SUBROUTINES = 0x8E4B;
+	int GL_UNIFORM_SIZE = GL31.GL_UNIFORM_SIZE;
+	int GL_UNIFORM_NAME_LENGTH = GL31.GL_UNIFORM_NAME_LENGTH;
 
 	int glGetSubroutineUniformLocation(@GLuint int program, @GLenum int shadertype, @Const @NullTerminated ByteBuffer name);
 
@@ -241,7 +243,7 @@ public interface GL40 {
 
 	@Alternate("glGetActiveSubroutineUniformiv")
 	@GLreturn("values")
-	@StripPostfix(value = "values", hasPostfix = false)
+	@StripPostfix(value = "values", postfix = "v")
 	void glGetActiveSubroutineUniformiv3(@GLuint int program, @GLenum int shadertype, @GLuint int index, @GLenum int pname,
 	                                     @OutParameter IntBuffer values);
 
@@ -281,7 +283,7 @@ public interface GL40 {
 
 	@Alternate("glGetUniformSubroutineuiv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", hasPostfix = false)
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetUniformSubroutineuiv3(@GLenum int shadertype, int location, @OutParameter @GLuint IntBuffer params);
 
 	@StripPostfix("values")
@@ -297,7 +299,7 @@ public interface GL40 {
 
 	@Alternate("glGetProgramStageiv")
 	@GLreturn("values")
-	@StripPostfix(value = "values", hasPostfix = false)
+	@StripPostfix(value = "values", postfix = "v")
 	void glGetProgramStageiv3(@GLuint int program, @GLenum int shadertype, @GLenum int pname, @OutParameter IntBuffer values);
 
 	// -----------------------------------------------------------------------
@@ -486,7 +488,7 @@ public interface GL40 {
 
 	@Alternate("glGetQueryIndexediv")
 	@GLreturn("params")
-	@StripPostfix(value = "params", hasPostfix = false)
+	@StripPostfix(value = "params", postfix = "v")
 	void glGetQueryIndexediv3(@GLenum int target, @GLuint int index, @GLenum int pname, @OutParameter IntBuffer params);
 
 }

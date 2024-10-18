@@ -41,19 +41,19 @@ package org.lwjgl.util.generator;
  * $Id$
  */
 
-import java.io.PrintWriter;
+import com.sun.mirror.declaration.*;
+import com.sun.mirror.type.*;
+
+import java.io.*;
 import java.lang.annotation.Annotation;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.type.TypeKind;
 
 public interface TypeMap {
 	void printCapabilitiesInit(PrintWriter writer);
 	String getCapabilities();
 	String getAPIUtilParam(boolean comma);
-	void printErrorCheckMethod(PrintWriter writer, ExecutableElement method, String tabs);
+	void printErrorCheckMethod(PrintWriter writer, MethodDeclaration method, String tabs);
 	String getRegisterNativesFunctionName();
-	TypeKind getPrimitiveTypeFromNativeType(Class<? extends Annotation> native_type);
+	PrimitiveType.Kind getPrimitiveTypeFromNativeType(Class<? extends Annotation> native_type);
 	String getTypedefPostfix();
 	String getFunctionPrefix();
 	void printNativeIncludes(PrintWriter writer);
@@ -63,7 +63,7 @@ public interface TypeMap {
 	Class[] getValidAnnotationTypes(Class type);
 	Class<? extends Annotation> getVoidType();
 	String translateAnnotation(Class<? extends Annotation> annotation_type);
-	Class getNativeTypeFromPrimitiveType(TypeKind kind);
+	Class getNativeTypeFromPrimitiveType(PrimitiveType.Kind kind);
 	String getAutoTypeFromAnnotation(AnnotationMirror annotation);
 	Class<? extends Annotation> getInverseType(Class<? extends Annotation> type);
 	Signedness getSignednessFromType(Class<? extends Annotation> type);

@@ -43,19 +43,32 @@
 
 	#define WIN32_LEAN_AND_MEAN
 	#ifndef _WIN32_WINDOWS
-		#define _WIN32_WINDOWS 0x0500
+		#define _WIN32_WINDOWS 0x0400
 	#endif
 	#ifndef WINVER
-		#define WINVER 0x0500
+		#define WINVER 0x0400
 	#endif
 	#ifndef _WIN32_WINNT
-		#define _WIN32_WINNT 0x0400
+		#define _WIN32_WINNT 0x0000
+	#endif
+	#ifndef _WIN32_IE
+		#define _WIN32_IE 0x0300
 	#endif
 
-	#define _UNICODE
-	#include <tchar.h>
+	#if defined(UNICODE) || defined(_UNICODE)
+		#include <tchar.h>
+		#ifndef UNICODE
+			#define UNICODE
+		#endif
+		#ifndef _UNICODE
+			#define _UNICODE
+		#endif
+	#endif
 
-	#define UNICODE
+	//#define _UNICODE
+	//#include <tchar.h>
+
+	//#define UNICODE
 	#include <windows.h>
 	#include <jni.h>
 	#include "common_tools.h"

@@ -51,73 +51,67 @@ import java.lang.annotation.Annotation;
 import java.nio.*;
 import java.util.HashMap;
 import java.util.Map;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.type.TypeKind;
+
+import com.sun.mirror.declaration.AnnotationMirror;
+import com.sun.mirror.declaration.MethodDeclaration;
+import com.sun.mirror.type.PrimitiveType;
 
 public class GLESTypeMap implements TypeMap {
 
-	private static final Map<Class<? extends Annotation>, TypeKind> native_types_to_primitive;
+	private static final Map<Class<? extends Annotation>, PrimitiveType.Kind> native_types_to_primitive;
 
 	static {
-		native_types_to_primitive = new HashMap<Class<? extends Annotation>, TypeKind>();
-		native_types_to_primitive.put(GLbitfield.class, TypeKind.INT);
-		native_types_to_primitive.put(GLclampf.class, TypeKind.FLOAT);
-		native_types_to_primitive.put(GLfloat.class, TypeKind.FLOAT);
-		native_types_to_primitive.put(GLint.class, TypeKind.INT);
-		native_types_to_primitive.put(GLshort.class, TypeKind.SHORT);
-		native_types_to_primitive.put(GLsizeiptr.class, TypeKind.LONG);
-		native_types_to_primitive.put(GLuint.class, TypeKind.INT);
-		native_types_to_primitive.put(GLboolean.class, TypeKind.BOOLEAN);
-		native_types_to_primitive.put(GLchar.class, TypeKind.BYTE);
-		native_types_to_primitive.put(GLhalf.class, TypeKind.SHORT);
-		native_types_to_primitive.put(GLsizei.class, TypeKind.INT);
-		native_types_to_primitive.put(GLushort.class, TypeKind.SHORT);
-		native_types_to_primitive.put(GLbyte.class, TypeKind.BYTE);
-		native_types_to_primitive.put(GLenum.class, TypeKind.INT);
-		native_types_to_primitive.put(GLintptr.class, TypeKind.LONG);
-		native_types_to_primitive.put(GLubyte.class, TypeKind.BYTE);
-		native_types_to_primitive.put(GLvoid.class, TypeKind.BYTE);
-		native_types_to_primitive.put(EGLint64NV.class, TypeKind.LONG);
-		native_types_to_primitive.put(EGLuint64NV.class, TypeKind.LONG);
-		native_types_to_primitive.put(GLint64.class, TypeKind.LONG);
-		native_types_to_primitive.put(GLuint64.class, TypeKind.LONG);
+		native_types_to_primitive = new HashMap<Class<? extends Annotation>, PrimitiveType.Kind>();
+		native_types_to_primitive.put(GLbitfield.class, PrimitiveType.Kind.INT);
+		native_types_to_primitive.put(GLclampf.class, PrimitiveType.Kind.FLOAT);
+		native_types_to_primitive.put(GLfloat.class, PrimitiveType.Kind.FLOAT);
+		native_types_to_primitive.put(GLint.class, PrimitiveType.Kind.INT);
+		native_types_to_primitive.put(GLshort.class, PrimitiveType.Kind.SHORT);
+		native_types_to_primitive.put(GLsizeiptr.class, PrimitiveType.Kind.LONG);
+		native_types_to_primitive.put(GLuint.class, PrimitiveType.Kind.INT);
+		native_types_to_primitive.put(GLboolean.class, PrimitiveType.Kind.BOOLEAN);
+		native_types_to_primitive.put(GLchar.class, PrimitiveType.Kind.BYTE);
+		native_types_to_primitive.put(GLhalf.class, PrimitiveType.Kind.SHORT);
+		native_types_to_primitive.put(GLsizei.class, PrimitiveType.Kind.INT);
+		native_types_to_primitive.put(GLushort.class, PrimitiveType.Kind.SHORT);
+		native_types_to_primitive.put(GLbyte.class, PrimitiveType.Kind.BYTE);
+		native_types_to_primitive.put(GLenum.class, PrimitiveType.Kind.INT);
+		native_types_to_primitive.put(GLintptr.class, PrimitiveType.Kind.LONG);
+		native_types_to_primitive.put(GLubyte.class, PrimitiveType.Kind.BYTE);
+		native_types_to_primitive.put(GLvoid.class, PrimitiveType.Kind.BYTE);
+		native_types_to_primitive.put(EGLint64NV.class, PrimitiveType.Kind.LONG);
+		native_types_to_primitive.put(EGLuint64NV.class, PrimitiveType.Kind.LONG);
+		native_types_to_primitive.put(GLint64.class, PrimitiveType.Kind.LONG);
+		native_types_to_primitive.put(GLuint64.class, PrimitiveType.Kind.LONG);
 	}
 
-	@Override
-	public TypeKind getPrimitiveTypeFromNativeType(Class<? extends Annotation> native_type) {
-		TypeKind kind = native_types_to_primitive.get(native_type);
+	public PrimitiveType.Kind getPrimitiveTypeFromNativeType(Class<? extends Annotation> native_type) {
+		PrimitiveType.Kind kind = native_types_to_primitive.get(native_type);
 		if ( kind == null )
 			throw new RuntimeException("Unsupported type " + native_type);
 		return kind;
 	}
 
-	@Override
 	public void printCapabilitiesInit(final PrintWriter writer) {
 		writer.println("\t\tContextCapabilities caps = GLContext.getCapabilities();");
 	}
 
-	@Override
 	public String getCapabilities() {
 		return "caps";
 	}
 
-	@Override
 	public String getAPIUtilParam(boolean comma) {
 		return "";
 	}
 
-	@Override
-	public void printErrorCheckMethod(final PrintWriter writer, final ExecutableElement method, final String tabs) {
+	public void printErrorCheckMethod(final PrintWriter writer, final MethodDeclaration method, final String tabs) {
 		writer.println(tabs + "Util.checkGLError();");
 	}
 
-	@Override
 	public String getRegisterNativesFunctionName() {
 		return "extgl_InitializeClass";
 	}
 
-	@Override
 	public Signedness getSignednessFromType(Class<? extends Annotation> type) {
 		if ( GLuint.class.equals(type) )
 			return Signedness.UNSIGNED;
@@ -139,7 +133,6 @@ public class GLESTypeMap implements TypeMap {
 			return Signedness.NONE;
 	}
 
-	@Override
 	public String translateAnnotation(Class annotation_type) {
 		if ( annotation_type.equals(GLuint64.class) || annotation_type.equals(GLint64.class) )
 			return "i64";
@@ -161,8 +154,7 @@ public class GLESTypeMap implements TypeMap {
 			throw new RuntimeException(annotation_type + " is not allowed");
 	}
 
-	@Override
-	public Class<? extends Annotation> getNativeTypeFromPrimitiveType(TypeKind kind) {
+	public Class<? extends Annotation> getNativeTypeFromPrimitiveType(PrimitiveType.Kind kind) {
 		Class<? extends Annotation> type;
 		switch ( kind ) {
 			case INT:
@@ -189,22 +181,18 @@ public class GLESTypeMap implements TypeMap {
 		return type;
 	}
 
-	@Override
 	public Class<? extends Annotation> getVoidType() {
 		return GLvoid.class;
 	}
 
-	@Override
 	public Class<? extends Annotation> getStringElementType() {
 		return GLubyte.class;
 	}
 
-	@Override
 	public Class<? extends Annotation> getStringArrayType() {
 		return GLchar.class;
 	}
 
-	@Override
 	public Class<? extends Annotation> getByteBufferArrayType() {
 		return GLubyte.class;
 	}
@@ -243,22 +231,18 @@ public class GLESTypeMap implements TypeMap {
 			return new Class[] { };
 	}
 
-	@Override
 	public String getTypedefPostfix() {
 		return "GL_APICALL ";
 	}
 
-	@Override
 	public String getFunctionPrefix() {
 		return "GL_APIENTRY";
 	}
 
-	@Override
 	public void printNativeIncludes(PrintWriter writer) {
 		writer.println("#include \"extgl.h\"");
 	}
 
-	@Override
 	public Class[] getValidAnnotationTypes(Class type) {
 		Class[] valid_types;
 		if ( Buffer.class.isAssignableFrom(type) )
@@ -276,7 +260,6 @@ public class GLESTypeMap implements TypeMap {
 		return valid_types;
 	}
 
-	@Override
 	public Class<? extends Annotation> getInverseType(Class<? extends Annotation> type) {
 		if ( GLuint64.class.equals(type) )
 			return GLint64.class;
@@ -296,7 +279,6 @@ public class GLESTypeMap implements TypeMap {
 			return null;
 	}
 
-	@Override
 	public String getAutoTypeFromAnnotation(AnnotationMirror annotation) {
 		Class annotation_class = NativeTypeTranslator.getClassFromType(annotation.getAnnotationType());
 		if ( annotation_class.equals(GLint.class) )

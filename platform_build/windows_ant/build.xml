@@ -7,7 +7,7 @@
 
 	<target name="compile_dir">
 		<apply dir="." failonerror="true" executable="cl" dest="." skipemptyfilesets="true" parallel="true">
-			<arg line="/c /W2 /EHsc /Ox /Gy /MT /MP /nologo"/>
+			<arg line="/c /W2 /EHsc /Ox /Gy /MT /nologo /D UNICODE /D _UNICODE"/>
 			<arg value="/I${sdkhome}\include"/>
 			<arg value="/I${java.home}\..\include"/>
 			<arg value="/I${java.home}\..\include\win32"/>
@@ -26,7 +26,7 @@
 			<mapper type="glob" from="*.c" to="*.obj"/>
 		</apply>
 	</target>
-
+	
 	<target name="link">
 		<apply dir="." parallel="true" executable="cl" failonerror="true">
 			<arg line="/LD /nologo"/>

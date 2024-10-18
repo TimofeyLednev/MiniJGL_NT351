@@ -46,7 +46,7 @@
  * Return a string containing the queried value, or NULL of the method fails.
  * In that case, a java exception is thrown.
  */
-static jstring queryRegistrationKey(JNIEnv *env, HKEY root_key, LPCTSTR subkey, LPCTSTR value) {
+static jstring queryRegistrationKey(JNIEnv *env, HKEY root_key, char * subkey, char * value) {
 	DWORD buf_size = 1;
 	char *result;
 	HKEY hKey;
@@ -54,8 +54,8 @@ static jstring queryRegistrationKey(JNIEnv *env, HKEY root_key, LPCTSTR subkey, 
 	jstring java_result;
 
 
-	if(RegOpenKeyEx(root_key,
-		TEXT(subkey),
+	if(RegOpenKeyExA(root_key,
+		subkey,
 		0,
 		KEY_QUERY_VALUE,
 		&hKey) != ERROR_SUCCESS) {
@@ -71,8 +71,8 @@ static jstring queryRegistrationKey(JNIEnv *env, HKEY root_key, LPCTSTR subkey, 
 	}
 
 	while (1) {
-		lRet = RegQueryValueEx(hKey,
-						TEXT(value),
+		lRet = RegQueryValueExA(hKey,
+						value,
 						NULL,
 						NULL,
 						(LPBYTE)result,
