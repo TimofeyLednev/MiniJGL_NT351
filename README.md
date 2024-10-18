@@ -7,15 +7,18 @@ Windows 95-11:
  - x86 ANSI
  - x86 Unicode
  - x64 Unicode
+
 Linux:
  - x64
  - x86
  - ARM64
+
 Solaris 8-11:
  - x86
  - x64
  - SPARC
  - SPARCv9
+
 Mac OS X 10.4-???
  - PowerPC
  - x64
