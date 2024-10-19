@@ -237,6 +237,7 @@ void resetDisplayMode(JNIEnv * env) {
 	ChangeDisplaySettings(NULL, 0);
 }
 
+//TODO investigate why char*? 
 jobject getVersion(JNIEnv * env, char *driver)
 {
 	DWORD var = 0;
@@ -254,6 +255,7 @@ jobject getVersion(JNIEnv * env, char *driver)
 	if (version_cons == NULL)
 		return NULL;
 
+	//TODO investigate why char*? 
 	dwInfoSize = GetFileVersionInfoSizeA(driver, &var);
 	lpInfoBuff = malloc(dwInfoSize);
 	if (lpInfoBuff == NULL) {

@@ -177,10 +177,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nCreateWindow(JNIEn
 	static bool oneShotInitialised = false;
 	if (!oneShotInitialised) {
 		if (!registerWindow(lwjglWindowProc, WINDOWCLASSNAME)) {
-			char strbuff[256];
-			//TODO -- NO!!!!!!!!!!!!!!!!!!!!!!!!!
-			sprintf(strbuff, "Could not register window class WIN32_ERROR(%d)\n", GetLastError());
-			throwException(env, strbuff);
+			throwException(env, "Could not register window class");
 			return 0;
 		}
 		oneShotInitialised = true;
@@ -353,6 +350,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nReshape(JNIEnv *env
 	SetWindowPos(hwnd, HWND_TOP, x, y, clientSize.right - clientSize.left, clientSize.bottom - clientSize.top, SWP_NOZORDER);
 }
 
+//TODO: Make work again, perhaps don't use BITMAPV5HEADER
 static HICON createWindowIcon(JNIEnv *env, jint *pixels, jint width, jint height) {
 /*	BITMAPV5HEADER bitmapInfo;
 	HBITMAP cursorMask;
@@ -533,6 +531,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nReleaseCapture(
 	return ReleaseCapture();
 }
 
+//TODO: Investigate not using _TrackMouseEvent
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_WindowsDisplay_nTrackMouseEvent(JNIEnv *env, jclass clazz, jlong hwnd_ptr) {
 	HWND hwnd = (HWND)(INT_PTR)hwnd_ptr;
 	TRACKMOUSEEVENT tme;

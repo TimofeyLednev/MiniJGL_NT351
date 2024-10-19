@@ -45,6 +45,7 @@
 /*
  * Return a string containing the queried value, or NULL of the method fails.
  * In that case, a java exception is thrown.
+ * TODO: WAS LPCTSTR -- INVESTIGATE WHY
  */
 static jstring queryRegistrationKey(JNIEnv *env, HKEY root_key, char * subkey, char * value) {
 	DWORD buf_size = 1;
