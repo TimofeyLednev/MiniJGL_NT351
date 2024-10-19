@@ -51,10 +51,11 @@ void *extal_NativeGetFunctionPointer(const char *function) {
 	return GetProcAddress(handleOAL, function);
 }
 
+//TODO: LoadLibraryA?
 void extal_LoadLibrary(JNIEnv *env, jstring path) {
 	char *path_str = GetStringNativeChars(env, path);
 	printfDebugJava(env, "Testing '%s'", path_str);
-	handleOAL = LoadLibrary(path_str);
+	handleOAL = LoadLibraryA(path_str);
 	if (handleOAL != NULL) {
 		printfDebugJava(env, "Found OpenAL at '%s'", path_str);
 	} else {

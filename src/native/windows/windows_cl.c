@@ -50,10 +50,11 @@ void * extcl_NativeGetFunctionPointer(const char *func_name) {
     return GetProcAddress(handleOCL, func_name);
 }
 
+//TODO: LoadLibraryA?
 void extcl_LoadLibrary(JNIEnv *env, jstring path) {
 	char *path_str = GetStringNativeChars(env, path);
 	printfDebugJava(env, "Testing '%s'", path_str);
-	handleOCL = LoadLibrary(path_str);
+	handleOCL = LoadLibraryA(path_str);
 	if (handleOCL != NULL) {
 		printfDebugJava(env, "Found OpenCL at '%s'", path_str);
 	} else {

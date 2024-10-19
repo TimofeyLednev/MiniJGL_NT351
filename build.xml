@@ -20,6 +20,7 @@
 	<target name="-initialize">
 		<mkdir dir="${lwjgl.bin}"                   taskname="initialiazing bin folder" />
 		<mkdir dir="${lwjgl.bin}/lwjgl"             taskname="initialiazing native bin folder" />
+		<mkdir dir="${lwjgl.bin}/lwjgl/ansi"             taskname="initialiazing native bin folder" />
 		<mkdir dir="${lwjgl.bin}/lwjgles"           taskname="initialiazing native OpenGL ES bin folder"/>
 		<mkdir dir="${lwjgl.lib}"                   taskname="initialiazing lib folder" />
 		<mkdir dir="${lwjgl.dist}"                  taskname="initialiazing dist folder" />
@@ -31,6 +32,7 @@
 		<mkdir dir="${lwjgl.temp}/res"              taskname="initialiazing temp/res folder" />
 		<mkdir dir="${lwjgl.temp}/native"           taskname="initialiazing temp/native folder" />
 		<mkdir dir="${lwjgl.temp}/native/windows"   taskname="initialiazing temp/windows folder" />
+		<mkdir dir="${lwjgl.temp}/native/windows-ansi"   taskname="initialiazing temp/windows folder" />
 		<mkdir dir="${lwjgl.temp}/native/linux"     taskname="initialiazing temp/linux folder" />
 		<mkdir dir="${lwjgl.temp}/native/freebsd"   taskname="initialiazing temp/freebsd folder" />
 		<mkdir dir="${lwjgl.temp}/native/macosx"    taskname="initialiazing temp/macosx folder" />

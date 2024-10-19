@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 
-<project name="lwjgl native code, native code" basedir="../../bin/lwjgl" default="compile">
-	<property name="native" location="../../src/native"/>
+<project name="lwjgl native code, native code" basedir="../../bin/lwjgl/ansi" default="compile">
+	<property name="native" location="../../../src/native"/>
 	<property environment="env"/>
 	<property name="sdkhome" location="${env.MSSDK}"/>
 
 	<target name="compile_dir">
-		<apply dir="./ansi" failonerror="true" executable="cl" dest="./ansi" skipemptyfilesets="true" parallel="true">
+		<apply dir="." failonerror="true" executable="cl" dest="." skipemptyfilesets="true" parallel="true">
 			<arg line="/c /W2 /EHsc /Ox /Gy /MT /nologo /D MBCS /D _MBCS"/>
 			<arg value="/I${sdkhome}\include"/>
 			<arg value="/I${java.home}\..\include"/>
@@ -37,16 +37,16 @@
 			<arg value="/OPT:REF"/>
 			<arg value="/OPT:ICF"/>
 			<arg line="/DLL /DELAYLOAD:jawt.dll ${libs}"/>
-			<fileset dir="./ansi" includes="*.obj"/>
+			<fileset dir="." includes="*.obj"/>
 		</apply>
 	</target>
 
 	<target name="clean">
 		<delete>
-			<fileset dir="./ansi" includes="*.obj"/>
-			<fileset dir="./ansi" includes="*.dll"/>
-			<fileset dir="./ansi" includes="*.exp"/>
-			<fileset dir="./ansi" includes="*.lib"/>
+			<fileset dir="." includes="*.obj"/>
+			<fileset dir="." includes="*.dll"/>
+			<fileset dir="." includes="*.exp"/>
+			<fileset dir="." includes="*.lib"/>
 		</delete>
 	</target>
 
