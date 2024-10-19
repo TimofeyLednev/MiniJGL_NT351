@@ -56,7 +56,7 @@ bool extgl_Open(JNIEnv *env) {
 	if (lib_gl_handle != NULL)
 		return true;
 	// load the dynamic libraries for OpenGL
-	lib_gl_handle = LoadLibrary("libGLESv2.dll");
+	lib_gl_handle = LoadLibrary(TEXT("libGLESv2.dll"));
 	if (lib_gl_handle == NULL) {
 		throwException(env, "Could not load OpenGL ES library");
 		return false;
