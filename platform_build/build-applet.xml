@@ -42,6 +42,13 @@
 			</fileset>
 		</jar>
 		<signjar jar="applet/basic/windows_natives.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
+				
+		<jar destfile="applet/basic/windows_ansi_natives.jar" taskname="windows_ansi_natives.jar">
+			<fileset dir="${lwjgl.lib}/windows-ansi">
+				<patternset refid="lwjgl-windows-ansi.fileset"/>
+			</fileset>
+		</jar>
+		<signjar jar="applet/basic/windows_ansi_natives.jar" alias="${alias}" keystore="${keystore}" storepass="${password}"/>
 		
 		<jar destfile="applet/basic/linux_natives.jar" taskname="linux_natives.jar">
 			<fileset dir="${lwjgl.lib}/linux">
@@ -130,6 +137,10 @@
 		<antcall target="compress-resource">
 			<param name="input" value="applet/basic/windows_natives.jar"/>
 			<param name="output" value="applet/advance/windows_natives.jar.lzma"/>
+		</antcall>
+		<antcall target="compress-resource">
+			<param name="input" value="applet/basic/windows_ansi_natives.jar"/>
+			<param name="output" value="applet/advance/windows_ansi_natives.jar.lzma"/>
 		</antcall>
 		<antcall target="compress-resource">
 			<param name="input" value="applet/basic/macosx_natives.jar"/>

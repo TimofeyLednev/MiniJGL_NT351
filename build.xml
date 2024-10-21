@@ -241,6 +241,11 @@
 				<patternset refid="lwjgl-windows.fileset" />
 			</fileset>
 		</copy>
+		<copy todir="${lwjgl.temp}/native/windows-ansi">
+			<fileset dir="${lwjgl.lib}/windows-ansi">
+				<patternset refid="lwjgl-windows-ansi.fileset" />
+			</fileset>
+		</copy>
 		<copy todir="${lwjgl.temp}/native/linux">
 			<fileset dir="${lwjgl.lib}/linux">
 				<patternset refid="lwjgl-linux.fileset" />
@@ -263,15 +268,15 @@
 		</copy>
 
 		<!-- create base package -->
-		<zip destfile="${lwjgl.dist}/lwjgl-${lwjgl.version}.zip">
-			<zipfileset dir="${lwjgl.temp}" prefix="lwjgl-${lwjgl.version}/">
+		<zip destfile="${lwjgl.dist}/minijgl-${lwjgl.version}.zip">
+			<zipfileset dir="${lwjgl.temp}" prefix="minijgl-${lwjgl.version}/">
 				<patternset refid="lwjgl_base"/>
 			</zipfileset>
 		</zip>
 
 		<!-- create applet package -->
-		<zip destfile="${lwjgl.dist}/lwjgl_applet-${lwjgl.version}.zip">
-			<zipfileset dir="." prefix="lwjgl_applet-${lwjgl.version}/">
+		<zip destfile="${lwjgl.dist}/minijgl_applet-${lwjgl.version}.zip">
+			<zipfileset dir="." prefix="minijgl_applet-${lwjgl.version}/">
 				<patternset refid="lwjgl_applet"/>
 			</zipfileset>
 		</zip>
@@ -279,12 +284,12 @@
 
 	<!-- Creates a versioned distribution of javadocs -->
 	<target name="-distribution_javadoc">
-		<zip destfile="${lwjgl.dist}/lwjgl-docs-${lwjgl.version}.zip" basedir="${lwjgl.docs}" includes="javadoc/**" />
+		<zip destfile="${lwjgl.dist}/minijgl-docs-${lwjgl.version}.zip" basedir="${lwjgl.docs}" includes="javadoc/**" />
 	</target>
 
 	<!-- Creates a versioned distribution of the source code -->
 	<target name="-distribution_source">
-		<zip destfile="${lwjgl.dist}/lwjgl-source-${lwjgl.version}.zip">
+		<zip destfile="${lwjgl.dist}/minijgl-source-${lwjgl.version}.zip">
 			<fileset refid="lwjgl.source.fileset" />
 		</zip>
 	</target>
@@ -537,8 +542,8 @@
 
 	<!-- Compiles LWJGL on solaris platforms -->
 	<target name="-compile_native_solaris" if="lwjgl.platform.solaris">
-		<!-- Reusing the linux ant task, but copy the output to solaris -->
-		<ant antfile="platform_build/linux_ant/build.xml" inheritAll="false"/>
+		<!-- New solaris ant task -->
+		<ant antfile="platform_build/solaris_ant/build.xml" inheritAll="false"/>
 		<copy todir="${lwjgl.lib}/solaris">
 			<fileset dir="${lwjgl.bin}/lwjgl" includes="liblwjgl*.so"/>
 		</copy>
@@ -549,6 +554,7 @@
 	<target name="-compile_native_macosx" if="lwjgl.platform.macosx">
 		<ant antfile="platform_build/macosx_ant/build.xml" inheritAll="false"/>
 		<copy file="${lwjgl.bin}/lwjgl/liblwjgl.jnilib" todir="${lwjgl.lib}/macosx"/>
+		<copy file="${lwjgl.bin}/lwjgl/liblwjgl.jnilib" tofile="${lwjgl.lib}/macosx/liblwjgl.dylib"/>
 		<version-check platform="macosx"/>
 	</target>
 

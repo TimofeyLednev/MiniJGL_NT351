@@ -726,7 +726,7 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 	 */
 	protected void loadJarURLs() throws Exception {
 		setState(STATE_DETERMINING_PACKAGES);
-
+		
 		// jars to load
 		String jarList = getParameter("al_jars");
 		String nativeJarList = null;
@@ -736,7 +736,18 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		if (osName.startsWith("Win")) {
 
 			// check if arch specific natives have been specified
-			if (System.getProperty("os.arch").endsWith("64")) {
+			if (isAnsiOs(osName))
+			{
+				if (System.getProperty("os.arch").endsWith("64")) {
+					nativeJarList = getParameter("al_windows_ansi64");
+				} else {
+					nativeJarList = getParameter("al_windows_ansi32");
+				}
+				if (nativeJarList == null) {
+					nativeJarList = getParameter("al_windows_ansi");
+				}
+			}
+			else if (System.getProperty("os.arch").endsWith("64")) {
 				nativeJarList = getParameter("al_windows64");
 			} else {
 				nativeJarList = getParameter("al_windows32");
@@ -811,6 +822,17 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		for (int i = jarCount; i < jarCount+nativeJarCount; i++) {
 			urlList[i] = new URL(path, nativeJars.nextToken());
 		}
+	}
+
+	private boolean isAnsiOs(String osName) {
+		if(osName.startsWith("Win"))
+		{
+			osName = osName.toLowerCase();
+			return (osName.contains("windows 95") ||
+	                osName.contains("windows 98") ||
+	                osName.contains("windows me"));
+		}
+		return false;
 	}
 
 	/**

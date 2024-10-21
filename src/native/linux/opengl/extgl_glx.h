@@ -33,6 +33,7 @@
 #ifndef EXTGL_GLX_H
 #define EXTGL_GLX_H
 
+#include <X11/Xlib.h> 
 #include <X11/Xutil.h>
 #include "extgl.h"
 
