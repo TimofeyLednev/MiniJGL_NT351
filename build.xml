@@ -636,7 +636,7 @@
 	<target name="applettest" depends="applet">
 		<exec executable="appletviewer">
 			<arg value="-J-Djava.security.policy=applet/appletviewer.policy"/>
-			<arg path="applet/applet.html"/>
+			<arg path="applet/basic/basicapplet.html"/>
 		</exec>
 	</target>
 

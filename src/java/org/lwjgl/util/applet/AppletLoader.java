@@ -31,8 +31,6 @@
  */
 package org.lwjgl.util.applet;
 
-import org.lwjgl.LWJGLUtil;
-
 import java.applet.Applet;
 import java.applet.AppletStub;
 import java.awt.BorderLayout;
@@ -1242,8 +1240,9 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 		    }
 			
 			// allow non lwjgl native to be found from cache directory
+			//TODO - fix .dylib and .jnilib problems on MacOS X + Java 8
 			protected String findLibrary (String libname) {
-				String libPath = path + "natives" + File.separator + LWJGLUtil.mapLibraryName(libname);
+				String libPath = path + "natives" + File.separator + System.mapLibraryName(libname);
 				
 				if (new File(libPath).exists()) {
 					return libPath;
