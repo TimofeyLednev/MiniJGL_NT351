@@ -784,6 +784,21 @@ public class AppletLoader extends Applet implements Runnable, AppletStub {
 			}
 			
 		} else if (osName.startsWith("Solaris") || osName.startsWith("SunOS")) {
+			if (System.getProperty("os.arch").endsWith("64")) {
+				nativeJarList = getParameter("al_solaris64");
+			} else if (System.getProperty("os.arch").contains("sparcv9")) {
+				nativeJarList = getParameter("al_solarissparcv9");
+			} else if (System.getProperty("os.arch").contains("sparc")) {
+				nativeJarList = getParameter("al_solarissparc");
+			} else
+			{
+				nativeJarList = getParameter("al_solaris32");
+			}
+
+			if (nativeJarList == null) {
+				nativeJarList = getParameter("al_solaris");
+			}
+			
 			nativeJarList = getParameter("al_solaris");
 		} else if (osName.startsWith("FreeBSD")) {
 			nativeJarList = getParameter("al_freebsd");
