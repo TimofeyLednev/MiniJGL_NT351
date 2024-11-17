@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 
-<project name="lwjgl native code, linux" basedir="../../bin/lwjgl" default="compile">
+<project name="lwjgl native code, linux" basedir="../../bin/lwjgles" default="compile">
 	<property name="native" location="../../src/native"/>
 	<property name="libname32" value="liblwjgl.so"/>
 	<property name="libname64" value="liblwjgl64.so"/>
-	<property name="libs32" value="-L/usr/X11R6/lib -L/usr/X11/lib -lm -lX11 -lXext -lXcursor -lXrandr -lXxf86vm -lpthread -L${java.home}/lib/i386 -ljawt" />
-	<property name="libs64" value="-L/usr/X11R6/lib64 -L/usr/X11/lib64 -lm -lX11 -lXext -lXcursor -lXrandr -lXxf86vm -lpthread -L${java.home}/lib/amd64 -ljawt" />
-	<property name="cflags32" value="-O2 -m32 -Wall -c -fPIC -std=c99 -Wunused"/>
+	<property name="libs32" value="-L/home/spasi/lwjgl/libs/linux -lEGL -L/usr/X11R6/lib -L/usr/X11/lib -lm -lX11 -lXext -lXcursor -lXrandr -lpthread -L${java.home}/lib/i386 -ljawt" />
+	<property name="libs64" value="-L${lib_folder}/x64 -lEGL -L/usr/X11R6/lib64 -L/usr/X11/lib64 -lm -lX11 -lXext -lXcursor -lXrandr -lXxf86vm -lpthread -L${java.home}/lib/amd64 -ljawt" />
+	<property name="cflags32" value="-O2 -Wall -c -fPIC -std=c99 -Wunused"/>
 
 	<target name="clean">
 		<delete>
@@ -21,6 +21,9 @@
 		<exec executable="uname" outputproperty="hwplatform">
 			<arg value="-m"/>
 		</exec>
+		<condition property="xf86vm_lib" value="-lXxf86vm" else="-Wl,-static,-lXxf86vm,-call_shared">
+			<os name="SunOS" />
+		</condition>
 		<condition property="cflags_pthread" value="-pthreads" else="-pthread">
 			<os name="SunOS" />
 		</condition>
@@ -36,13 +39,12 @@
     		<os name="SunOS" />
     	</condition>
 
-		<property name="linker_flags32" value="${version_script_flags32} -m32 -shared -O2 -Wall -o ${libname32} ${libs32}"/>
-		<property name="linker_flags64" value="${version_script_flags64} -shared -O2 -Wall -o ${libname64} ${libs64}"/>
+		<property name="linker_flags32" value="${version_script_flags32} -shared -O2 -Wall -o ${libname32} ${libs32} ${xf86vm_lib}"/>
+		<property name="linker_flags64" value="${version_script_flags64} -shared -O2 -Wall -o ${libname64} ${libs64} ${xf86vm_lib}"/>
 
     	<condition property="build.32bit.only">
     		<not>
 	    		<or>
-					<isset property="build_all" />
 					<equals arg1="${hwplatform}" arg2="x86_64"/>
 					<equals arg1="${hwplatform}" arg2="i86pc"/>
 				</or>
@@ -52,9 +54,6 @@
     	<!-- On linux, the 64 bit jre doesn't have the 32 bit libs -->
     	<condition property="build.64bit.only">
     		<and>
-				<not>
-					<isset property="build_all" />
-				</not>
     			<os name="Linux"/>
     			<equals arg1="${hwplatform}" arg2="x86_64"/>
     		</and>
@@ -74,17 +73,17 @@
 			<arg value="-I${java.home}/../include/linux"/>
 			<arg value="-I${java.home}/../include/solaris"/>
 			<arg value="-I${native}/common"/>
-		    <arg value="-I${native}/common/opengl"/>
+		    <arg value="-I${native}/common/opengles"/>
 			<arg value="-I${native}/linux"/>
-		    <arg value="-I${native}/linux/opengl"/>
+		    <arg value="-I${native}/linux/opengles"/>
 			<mapper type="glob" from="*.c" to="*.o"/>
 		    <fileset dir="${native}/common" includes="*.c"/>
-		    <fileset dir="${native}/common/opengl" includes="*.c"/>
+		    <fileset dir="${native}/common/opengles" includes="*.c"/>
 		    <fileset dir="${native}/generated/openal" includes="*.c"/>
 		    <fileset dir="${native}/generated/opencl" includes="*.c"/>
-		    <fileset dir="${native}/generated/opengl" includes="*.c"/>
+		    <fileset dir="${native}/generated/opengles" includes="*.c"/>
 		    <fileset dir="${native}/linux" includes="*.c"/>
-		    <fileset dir="${native}/linux/opengl" includes="*.c"/>
+		    <fileset dir="${native}/linux/opengles" includes="*.c"/>
 	    </apply>
 		<apply dir="." parallel="true" executable="gcc" failonerror="true">
 			<srcfile/>
@@ -106,17 +105,17 @@
 			<arg value="-I${java.home}/../include/linux"/>
 			<arg value="-I${java.home}/../include/solaris"/>
 			<arg value="-I${native}/common"/>
-		    <arg value="-I${native}/common/opengl"/>
+		    <arg value="-I${native}/common/opengles"/>
 			<arg value="-I${native}/linux"/>
-		    <arg value="-I${native}/linux/opengl"/>
+		    <arg value="-I${native}/linux/opengles"/>
 			<mapper type="glob" from="*.c" to="*.o"/>
 		    <fileset dir="${native}/common" includes="*.c"/>
-		    <fileset dir="${native}/common/opengl" includes="*.c"/>
-		    <fileset dir="${native}/generated/openal" includes="*.c"/>
-		    <fileset dir="${native}/generated/opencl" includes="*.c"/>    		
-		    <fileset dir="${native}/generated/opengl" includes="*.c"/>
+		    <fileset dir="${native}/common/opengles" includes="*.c"/>
+			<fileset dir="${native}/generated/openal" includes="*.c"/>
+			<fileset dir="${native}/generated/opencl" includes="*.c"/>    		
+		    <fileset dir="${native}/generated/opengles" includes="*.c"/>
 		    <fileset dir="${native}/linux" includes="*.c"/>
-		    <fileset dir="${native}/linux/opengl" includes="*.c"/>
+		    <fileset dir="${native}/linux/opengles" includes="*.c"/>
 	    </apply>
 		<apply dir="." parallel="true" executable="gcc" failonerror="true">
 			<srcfile/>
