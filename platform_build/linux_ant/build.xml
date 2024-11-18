@@ -62,8 +62,10 @@
 			<or>
 				<and>
 					<not>
-						<isset property="build_all" />
-						<isset property="force_x86" />
+						<or>
+							<isset property="build_all" />
+							<isset property="force_x86" />
+						</or>
 					</not>
 					<os name="Linux"/>
 					<equals arg1="${hwplatform}" arg2="x86_64"/>
