@@ -40,24 +40,30 @@
 		<property name="linker_flags64" value="${version_script_flags64} -shared -O2 -Wall -o ${libname64} ${libs64}"/>
 
     	<condition property="build.32bit.only">
-    		<not>
-	    		<or>
-					<isset property="build_all" />
-					<equals arg1="${hwplatform}" arg2="x86_64"/>
-					<equals arg1="${hwplatform}" arg2="i86pc"/>
-				</or>
-    		</not>
+			<or>
+				<not>
+					<or>
+						<isset property="build_all" />
+						<equals arg1="${hwplatform}" arg2="x86_64"/>
+						<equals arg1="${hwplatform}" arg2="i86pc"/>
+					</or>
+				</not>
+				<isset property="force_x86" />
+			</or>
     	</condition>
 
     	<!-- On linux, the 64 bit jre doesn't have the 32 bit libs -->
     	<condition property="build.64bit.only">
-    		<and>
-				<not>
-					<isset property="build_all" />
-				</not>
-    			<os name="Linux"/>
-    			<equals arg1="${hwplatform}" arg2="x86_64"/>
-    		</and>
+			<or>
+				<and>
+					<not>
+						<isset property="build_all" />
+					</not>
+					<os name="Linux"/>
+					<equals arg1="${hwplatform}" arg2="x86_64"/>
+				</and>
+				<isset property="force_x86_64" />
+			</or>
     	</condition>
 
     	<antcall target="compile32"/>
