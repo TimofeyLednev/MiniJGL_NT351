@@ -48,7 +48,12 @@
 						<equals arg1="${hwplatform}" arg2="i86pc"/>
 					</or>
 				</not>
-				<isset property="force_x86" />
+				<and>
+					<isset property="force_x86" />
+					<not>
+						<isset property="force_x86_64" />
+					</not>
+				</and>
 			</or>
     	</condition>
 
@@ -62,7 +67,12 @@
 					<os name="Linux"/>
 					<equals arg1="${hwplatform}" arg2="x86_64"/>
 				</and>
-				<isset property="force_x86_64" />
+				<and>
+					<isset property="force_x86_64" />
+					<not>
+						<isset property="force_x86" />
+					</not>
+				</and>
 			</or>
     	</condition>
 
