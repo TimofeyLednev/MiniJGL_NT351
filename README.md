@@ -1,6 +1,9 @@
 MiniJGL - A continuation of Lightweight Java Game Library 2
 ======
 
+FORK MINIJGL WITH SUPPORT NT 3.51 (soon..)
+![Screenshot Windows NT 3.51](/doc/57361D8D-9F2C-4B41-9724-2EBEDFE0FD99.png)
+
 MiniJGL is a continuation of LWJGL2, as well as a project to increase the range of OS and Architecture compatibility. Windows 95 was successfully tested. Future platform plans are:
 
 Windows 95-11:
