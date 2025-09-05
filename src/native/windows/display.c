@@ -224,12 +224,36 @@ jobject convertToNativeRamp(JNIEnv *env, jobject float_gamma_obj) {
 }
 
 jobject getCurrentDisplayMode(JNIEnv * env) {
-	DEVMODE devmode;
-	if (!EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &devmode)) {
-		throwFormattedException(env, "Couldn't get current display settings (%ld)", GetLastError());
-		return NULL;
-	}
-	return createDisplayMode(env, &devmode);
+    DEVMODE devmode;
+    
+    OSVERSIONINFO osvi;
+    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+    GetVersionEx(&osvi);
+    
+    if (osvi.dwMajorVersion < 4) {
+        HDC hdc = GetDC(NULL);
+        if (!hdc) {
+            throwFormattedException(env, "Couldn't get device context (%ld)", GetLastError());
+            return NULL;
+        }
+        
+        memset(&devmode, 0, sizeof(DEVMODE));
+        devmode.dmSize = sizeof(DEVMODE);
+        devmode.dmPelsWidth = GetDeviceCaps(hdc, HORZRES);
+        devmode.dmPelsHeight = GetDeviceCaps(hdc, VERTRES);
+        devmode.dmBitsPerPel = GetDeviceCaps(hdc, BITSPIXEL);
+        devmode.dmDisplayFrequency = GetDeviceCaps(hdc, VREFRESH);
+        devmode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL | DM_DISPLAYFREQUENCY;
+        
+        ReleaseDC(NULL, hdc);
+    } else {
+        if (!EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &devmode)) {
+            throwFormattedException(env, "Couldn't get current display settings (%ld)", GetLastError());
+            return NULL;
+        }
+    }
+    
+    return createDisplayMode(env, &devmode);
 }
 
 void resetDisplayMode(JNIEnv * env) {
